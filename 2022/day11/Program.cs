@@ -15,7 +15,6 @@ class PuzzleRunner
         {
             var input = reader.ReadToEnd();
             var monkeyList = ParseMonkeys(input);
-
             for (var i = 0; i < 20; i++)
             {
                 makeRound(monkeyList, w => w/3);
@@ -23,9 +22,18 @@ class PuzzleRunner
             var result = monkeyList
             .OrderByDescending(monkey => monkey.inspectedItems)
             .Take(2).Aggregate(1, (res, monkey) => res * monkey.inspectedItems);
-
             Console.WriteLine($"result : {result}");
-            // Console.WriteLine($"result Part 2: {resultPart2.Sum()}");
+
+            var monkeyList2 = ParseMonkeys(input);
+            var commonDenominator = monkeyList2.Aggregate(1, (comDen, monkey) => comDen * monkey.mod);
+            for (var i = 0; i < 10000; i++)
+            {
+                makeRound(monkeyList2, w => w % commonDenominator);
+            }
+            var resultPart2 = monkeyList2
+            .OrderByDescending(monkey => monkey.inspectedItems)
+            .Take(2).Aggregate((long)1, (res, monkey) => res * monkey.inspectedItems);
+            Console.WriteLine($"result Part 2: {resultPart2}");
         }
 
     }
